@@ -1,4 +1,6 @@
 
+let cart = []
+const button = document.getElementById ("addToCart")
 const url = "http://localhost:3000/api/products/"
 // sert a nous dire de prendre l'id qui se trouve dans l'url pour pouvoir savoir quel products on doit afficher
 const str = window.location.href
@@ -30,13 +32,19 @@ function ajoutDscrpt(products) {
     dscrpt.innerText = `"${products.description}"`
 }
 
+// ajout des couleurs avec un nouveau paramètre à prendre en compte , i = le nombre de couleurs disponible
 function ajoutClr(products, i) {
     let clrs = document.getElementById("colors")
     clrs.innerHTML += `<option value = "${products.colors[i]}">"${products.colors[i]}"</option>`
 }
 
+function ajouterAuPanier(products) {
+    cart.splice(cart.length, 0 ,[products._id,0,products.colors[1]])
+    console.log(cart)
+}
 
-// ajout des 5 fonction du dessus par rapport à l'id récupérer dans l'url !
+
+// ajout des fonction du dessus par rapport à l'id récupérer dans l'url !
 fetch(url + productId)
     .then(function(res) {
     if (res.ok) {
@@ -47,15 +55,19 @@ fetch(url + productId)
         ajoutImg(value)
         ajoutH1(value)
         ajoutPrix(value)
+
         ajoutDscrpt(value)
-        console.log(value["colors"])
+        // ici on va ajouter la fonction ajoutClr pour autant de couleur qu'il y'a dans l'element sélectionné
         for (let i = 0; i < value["colors"].length; i++) {
             ajoutClr(value, i)  
         }
-        console.log(value)
+
+        button.addEventListener("click", ajouterAuPanier(value))
     })
     .catch(function(err) {
     console.log("Une erreur est survenue")
     });
+
+
 
 
