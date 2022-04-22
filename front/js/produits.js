@@ -6,29 +6,37 @@ const newUrl = new URL(str);
 const productId = newUrl.searchParams.get("id").replace(/"/g,"")
 
 
-
+// ajoute une image au premier élément avec la classe item__img
 function ajoutImg(products){
-    let itemImg = document.getElementsByClassName("item__img")
+    let itemImg = document.getElementsByClassName("item__img")[0]
     itemImg.innerHTML = `<img src="${products.imageUrl}" alt="${products.altTxt}">`;
 }
 
+// ajout du name dans id=title
 function ajoutH1(products){
     let title = document.getElementById("title")
     title.innerText = `"${products.name}"`
 }
 
+// ajout du prix dans id=price
 function ajoutPrix(products){
     let price = document.getElementById("price")
     price.innerText = `"${products.price}"`
 }
 
+// ajout de la dercription dans id=description
 function ajoutDscrpt(products) {
     let dscrpt = document.getElementById("description")
     dscrpt.innerText = `"${products.description}"`
 }
 
+function ajoutClr(products, i) {
+    let clrs = document.getElementById("colors")
+    clrs.innerHTML += `<option value = "${products.colors[i]}">"${products.colors[i]}"</option>`
+}
 
 
+// ajout des 5 fonction du dessus par rapport à l'id récupérer dans l'url !
 fetch(url + productId)
     .then(function(res) {
     if (res.ok) {
@@ -40,7 +48,10 @@ fetch(url + productId)
         ajoutH1(value)
         ajoutPrix(value)
         ajoutDscrpt(value)
-
+        console.log(value["colors"])
+        for (let i = 0; i < value["colors"].length; i++) {
+            ajoutClr(value, i)  
+        }
         console.log(value)
     })
     .catch(function(err) {
