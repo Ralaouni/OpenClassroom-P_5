@@ -1,0 +1,23 @@
+{
+  "name": "kanap-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.5",
+    "babel-polyfill": "^6.26.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-serve": "^4.0.0"
+  }
+}
