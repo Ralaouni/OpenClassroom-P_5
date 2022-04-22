@@ -1,6 +1,6 @@
 
 let cart = []
-const button = document.getElementById ("addToCart")
+let button = document.getElementById ("addToCart")
 const url = "http://localhost:3000/api/products/"
 // sert a nous dire de prendre l'id qui se trouve dans l'url pour pouvoir savoir quel products on doit afficher
 const str = window.location.href
@@ -61,13 +61,25 @@ fetch(url + productId)
         for (let i = 0; i < value["colors"].length; i++) {
             ajoutClr(value, i)  
         }
-
-        button.addEventListener("click", ajouterAuPanier(value))
     })
     .catch(function(err) {
     console.log("Une erreur est survenue")
     });
 
+button.addEventListener("click", function() {
+    fetch(url + productId)
+    .then(function(res) {
+    if (res.ok) {
+        return res.json();
+    }
+    })
+    .then(function(value) {
+        ajouterAuPanier(value)
+    })
+    .catch(function(err) {
+    console.log("Une erreur est survenue")
+    })
+})
 
 
 
