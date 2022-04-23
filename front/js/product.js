@@ -38,6 +38,7 @@ function ajoutClr(products, i) {
     clrs.innerHTML += `<option value = "${products.colors[i]}">"${products.colors[i]}"</option>`
 }
 
+// ici nous avons une fonction qui va nous permettre d'ajouter les articles sélectionné mais qui va aussi détecter si l'article exisite déjà , auquel cas il va augmenter la quantité de 1
 function ajouterAuPanier(products) {
     let select = document.querySelector("select")
     cart.splice(cart.length, 1 ,[products._id,1,select.value])
@@ -47,7 +48,6 @@ function ajouterAuPanier(products) {
                 cart[i][1] ++;
             }
         }
-    console.log(cart)
     localStorage.setItem("cart", JSON.stringify(cart))
     console.log(localStorage)
 }
