@@ -39,8 +39,17 @@ function ajoutClr(products, i) {
 }
 
 function ajouterAuPanier(products) {
-    cart.splice(cart.length, 0 ,[products._id,0,products.colors[1]])
+    let select = document.querySelector("select")
+    cart.splice(cart.length, 1 ,[products._id,1,select.value])
+        for (let i = 0; i < cart.length - 1; i++) {
+            if (cart.length > 1 && cart[i][0] === cart[cart.length - 1][0] && cart[i][2] === cart[cart.length - 1][2]) {
+                cart.pop();
+                cart[i][1] ++;
+            }
+        }
     console.log(cart)
+    localStorage.setItem("cart", JSON.stringify(cart))
+    console.log(localStorage)
 }
 
 
@@ -80,6 +89,8 @@ button.addEventListener("click", function() {
     console.log("Une erreur est survenue")
     })
 })
+
+
 
 
 
