@@ -1,11 +1,13 @@
 
 let cart = []
 let button = document.getElementById ("addToCart")
+let q = 0
 const url = "http://localhost:3000/api/products/"
 // sert a nous dire de prendre l'id qui se trouve dans l'url pour pouvoir savoir quel products on doit afficher
 const str = window.location.href
 const newUrl = new URL(str);
 const productId = newUrl.searchParams.get("id").replace(/"/g,"")
+const quantity = document.getElementById("quantity")
 
 
 // ajoute une image au premier élément avec la classe item__img
@@ -41,11 +43,11 @@ function ajoutClr(products, i) {
 // ici nous avons une fonction qui va nous permettre d'ajouter les articles sélectionné mais qui va aussi détecter si l'article exisite déjà , auquel cas il va augmenter la quantité de 1
 function ajouterAuPanier(products) {
     let select = document.querySelector("select")
-    cart.splice(cart.length, 1 ,[products._id,1,select.value])
+    cart.splice(cart.length, 1 ,[products._id,q,select.value])
         for (let i = 0; i < cart.length - 1; i++) {
             if (cart.length > 1 && cart[i][0] === cart[cart.length - 1][0] && cart[i][2] === cart[cart.length - 1][2]) {
                 cart.pop();
-                cart[i][1] ++;
+                cart[i][1] += q;
             }
         }
     localStorage.setItem("cart", JSON.stringify(cart))
@@ -74,7 +76,9 @@ fetch(url + productId)
     .catch(function(err) {
     console.log("Une erreur est survenue")
     });
-
+quantity.addEventListener('change',function(){
+    q = parseFloat(this.value)
+})
 button.addEventListener("click", function() {
     fetch(url + productId)
     .then(function(res) {

@@ -10,18 +10,9 @@ const totQty = document.getElementById("totalQuantity")
 
 const totPrice = document.getElementById("totalPrice")
 
-// fonction qui calcul la quantité de produit en additionnant toute les quantité que nous avons dans le local storage
-function totalQty () {
-    let tot = 0
-    for (let i = 0; i < cart_storage.length; i++) {
-        tot += cart_storage[i][1]
-    }
-    totQty.innerText = tot
-}
 
 // on va ajouter les produits dans cart.html
-function panier () {
-    let tot = 0
+function panierHtml () {
     // on répète la fonction ppour le nombre d'élément dans le local storage
     for (let i = 0; i < cart_storage.length; i++) {
         fetch(url+cart_storage[i][0])
@@ -30,12 +21,11 @@ function panier () {
               return res.json();
             }
           })
-          .then(function(value) {
-            //   ici on additionne tout les prix de chaque élément du local storage
-              totPrice.innerText = tot += value.price
+        .then(function(value) {
             // ici on ajoute le HTML contenant tout nos produits dans "cart__items" tout en gardant la couleur choisie et la quantité de chaque éléments 
-            cart_items.innerHTML += `
-                <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+            function panier1(value){
+                cart_items.innerHTML += `
+                <article class="cart__item" data-id="${value._id}" data-color="${cart_storage[i][2]}">
                     <div class="cart__item__img">
                     <img src="${value.imageUrl}" alt="${value.altTxt}">
                     </div>
@@ -57,14 +47,94 @@ function panier () {
                     </div>
                 </article>
               `
-          })
-          .catch(function(err) {
+            }
+            panier1(value)
+
+            function changeQty() {
+                let qty = document.querySelectorAll(".itemQuantity")
+                let qtyArray = Array.prototype.slice.call(qty)
+                
+                qtyArray.forEach(item => {
+                    item.addEventListener("change", function(){
+                        let article = item.closest("article")
+                        for (let i = 0; i < cart_storage.length; i++) {
+                            if (article.getAttribute("data-id") == cart_storage[i][0] && article.getAttribute("data-color") == cart_storage[i][2]) {
+                                cart_storage[i][1] = parseFloat(this.value)
+                            }
+                            if (cart_storage[i][1] == 0) {
+                                article.remove()
+                                cart_storage.splice(i,1)
+                            }
+                        }
+                        totalQty()
+                        price(value)
+                        console.log(this.value)
+                        console.log(cart_storage)
+                    })
+                });
+            }
+
+            changeQty()
+
+            function deleteElement() {
+                let button = document.querySelectorAll(".deleteItem")
+                let buttonArray = Array.prototype.slice.call(button)
+
+                buttonArray.forEach(item => {
+                    item.addEventListener("click", function(){
+                        console.log("hello")
+                        let article = item.closest("article")
+                        for (let i = 0; i < cart_storage.length; i++) {
+                            if (article.getAttribute("data-id") == cart_storage[i][0] && article.getAttribute("data-color") == cart_storage[i][2]) {
+                                article.remove()
+                                cart_storage.splice(i,1)
+                            }
+                        }
+                        totalQty()
+                        price(value)
+                        console.log(cart_storage)
+                    })
+                });
+            }
+
+            deleteElement()
+            
+
+            //   ici on additionne tout les prix de chaque élément du local storage
+            function price(value){
+                let tot = 0
+                if (cart_storage.length >  0) {
+                    for (let i = 0; i < cart_storage.length; i++) {
+                        totPrice.innerText = (tot += (value.price * cart_storage[i][1]))
+                    }
+                
+                } else {
+                    tot = 0
+                    totPrice.innerText = tot
+                }
+            }
+            price(value)
+
+            // fonction qui calcul la quantité de produit en additionnant toute les quantité que nous avons dans le local storage
+            function totalQty () {
+                let tot = 0
+                for (let i = 0; i < cart_storage.length; i++) {
+                    tot += cart_storage[i][1]
+                }
+                totQty.innerText = tot
+            }
+
+            totalQty()
+
+        })
+        .catch(function(err) {
              console.log("Une erreur est survenue")
-          });
+        });
+        
     }
 }
 
+panierHtml()
 
-panier()
-totalQty()
 
+                
