@@ -76,9 +76,11 @@ fetch(url + productId)
     .catch(function(err) {
     console.log("Une erreur est survenue")
     });
+
 quantity.addEventListener('change',function(){
     q = parseFloat(this.value)
 })
+
 button.addEventListener("click", function() {
     fetch(url + productId)
     .then(function(res) {

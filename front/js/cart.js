@@ -69,7 +69,7 @@ function panierHtml () {
                         totalQty()
                         price(value)
                         console.log(this.value)
-                        console.log(cart_storage)
+                        localStorage.cart = JSON.stringify(cart_storage)
                     })
                 });
             }
@@ -82,17 +82,17 @@ function panierHtml () {
 
                 buttonArray.forEach(item => {
                     item.addEventListener("click", function(){
-                        console.log("hello")
                         let article = item.closest("article")
                         for (let i = 0; i < cart_storage.length; i++) {
                             if (article.getAttribute("data-id") == cart_storage[i][0] && article.getAttribute("data-color") == cart_storage[i][2]) {
                                 article.remove()
                                 cart_storage.splice(i,1)
+                                localStorage.cart = JSON.stringify(cart_storage)
                             }
                         }
                         totalQty()
                         price(value)
-                        console.log(cart_storage)
+                        console.log(localStorage)
                     })
                 });
             }
@@ -135,6 +135,69 @@ function panierHtml () {
 }
 
 panierHtml()
+
+function form () {
+    let regExpName = /^[A-Z]+([\ A-Za-z]+)*/;
+    let regExpNoNumber = /^[^0-9()]+$/
+    let regExpAddress = /^[0-9]{1,4}(?:[,. ]){1}([a-zA-Z]+)*/
+    let regExpEmail =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    let firstName = document.getElementById("firstName")
+    firstName.addEventListener ('change', function() {
+        if (regExpName.test(firstName.value) && regExpNoNumber.test(firstName.value)) {
+            document.getElementById("firstNameErrorMsg").innerHTML = ""
+            return true
+        } else {
+            document.getElementById("firstNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+            return false
+        }
+    })
+
+    let lastName = document.getElementById("lastName")
+    lastName.addEventListener ('change', function() {
+        if (regExpName.test(lastName.value) && regExpNoNumber.test(lastName.value)) {
+            document.getElementById("lastNameErrorMsg").innerHTML = ""
+            return true
+        } else {
+            document.getElementById("lastNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+            return false
+        }
+    })
+
+    let address = document.getElementById("address")
+    address.addEventListener ('change', function(){
+        if (regExpAddress.test(address.value)) {
+            document.getElementById("addressErrorMsg").innerHTML = ""
+            return true
+        } else {
+            document.getElementById("addressErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+            return false
+        }
+    })
+
+    let city = document.getElementById("city")
+    city.addEventListener ('change', function() {
+        if (regExpName.test(city.value) && regExpNoNumber.test(city.value)) {
+            document.getElementById("cityErrorMsg").innerHTML = ""
+            return true
+        } else {
+            document.getElementById("cityErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+            return false
+        }
+    })
+
+    let email = document.getElementById("email")
+    email.addEventListener ('change', function() {
+        if (regExpEmail.test(email.value)) {
+            document.getElementById("emailErrorMsg").innerHTML = ""
+            return true
+        } else {
+            document.getElementById("emailErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+            return false
+        }
+    })
+}
+
+form()
 
 
                 
