@@ -141,63 +141,130 @@ function form () {
     let regExpNoNumber = /^[^0-9()]+$/
     let regExpAddress = /^[0-9]{1,4}(?:[,. ]){1}([a-zA-Z]+)*/
     let regExpEmail =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-    let firstName = document.getElementById("firstName")
-    firstName.addEventListener ('change', function() {
-        if (regExpName.test(firstName.value) && regExpNoNumber.test(firstName.value)) {
-            document.getElementById("firstNameErrorMsg").innerHTML = ""
-            return true
-        } else {
-            document.getElementById("firstNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-            return false
+
+    function firstName() {
+        let firstName = document.getElementById("firstName")
+        firstName.addEventListener ('change', function() {
+            if (regExpName.test(firstName.value) && regExpNoNumber.test(firstName.value)) {
+                document.getElementById("firstNameErrorMsg").innerHTML = ""
+                return true
+            } else {
+                document.getElementById("firstNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+                return false
+            }
+        })
+    }
+
+    firstName()
+
+    function lastName(){
+        let lastName = document.getElementById("lastName")
+        lastName.addEventListener ('change', function() {
+            if (regExpName.test(lastName.value) && regExpNoNumber.test(lastName.value)) {
+                document.getElementById("lastNameErrorMsg").innerHTML = ""
+                return true
+            } else {
+                document.getElementById("lastNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+                return false
+            }
+        })
+    }
+
+    lastName()
+    
+    function address(){
+        let address = document.getElementById("address")
+        address === false
+        address.addEventListener ('change', function(){
+            if (regExpAddress.test(address.value)) {
+                document.getElementById("addressErrorMsg").innerHTML = ""
+                address === true
+                return true
+            } else {
+                document.getElementById("addressErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+                address === false
+                return false
+            }
+            
+        })
+    }
+
+    address()
+
+    function city() {
+        let city = document.getElementById("city")
+        city.addEventListener ('change', function() {
+            if (regExpName.test(city.value) && regExpNoNumber.test(city.value)) {
+                document.getElementById("cityErrorMsg").innerHTML = ""
+                return true
+            } else {
+                document.getElementById("cityErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+                return false
+            }
+        })
+    }
+
+    city()
+
+    function email () {
+        let email = document.getElementById("email")
+        email.addEventListener ('change', function() {
+            if (regExpEmail.test(email.value)) {
+                document.getElementById("emailErrorMsg").innerHTML = ""
+                return true
+            } else {
+                document.getElementById("emailErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+                return false
+            }
+        })
+    }
+
+    email()
+
+    document.getElementById("order").addEventListener("click", function(){
+        if (firstName()) {
+            console.log("ass")
         }
     })
+    
+}
 
-    let lastName = document.getElementById("lastName")
-    lastName.addEventListener ('change', function() {
-        if (regExpName.test(lastName.value) && regExpNoNumber.test(lastName.value)) {
-            document.getElementById("lastNameErrorMsg").innerHTML = ""
-            return true
-        } else {
-            document.getElementById("lastNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-            return false
+form()
+
+function post (){
+    document.getElementById("order").addEventListener("click", function(){
+        let contact = {
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+            email: document.getElementById("email").value,
+
         }
-    })
-
-    let address = document.getElementById("address")
-    address.addEventListener ('change', function(){
-        if (regExpAddress.test(address.value)) {
-            document.getElementById("addressErrorMsg").innerHTML = ""
-            return true
-        } else {
-            document.getElementById("addressErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-            return false
-        }
-    })
-
-    let city = document.getElementById("city")
-    city.addEventListener ('change', function() {
-        if (regExpName.test(city.value) && regExpNoNumber.test(city.value)) {
-            document.getElementById("cityErrorMsg").innerHTML = ""
-            return true
-        } else {
-            document.getElementById("cityErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-            return false
-        }
-    })
-
-    let email = document.getElementById("email")
-    email.addEventListener ('change', function() {
-        if (regExpEmail.test(email.value)) {
-            document.getElementById("emailErrorMsg").innerHTML = ""
-            return true
-        } else {
-            document.getElementById("emailErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-            return false
+        if (form()) {
+            fetch("http://url-service-web.com/api/users", {
+                method: "POST",
+                headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'application/json' 
+            },
+                body: JSON.stringify(jsonBody)
+            });
         }
     })
 }
 
-form()
+fetch(url+"order", {
+	method: "POST",
+	headers: { 
+'Accept': 'application/json', 
+'Content-Type': 'application/json' 
+},
+	body: JSON.stringify(jsonBody)
+});
+
+
+
 
 
                 
