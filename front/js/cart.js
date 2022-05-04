@@ -50,6 +50,8 @@ function panierHtml () {
             }
             panier1(value)
 
+            // change la quantité 
+
             function changeQty() {
                 let qty = document.querySelectorAll(".itemQuantity")
                 let qtyArray = Array.prototype.slice.call(qty)
@@ -57,9 +59,12 @@ function panierHtml () {
                 qtyArray.forEach(item => {
                     item.addEventListener("change", function(){
                         let article = item.closest("article")
+                        let p = item.closest('div').querySelector('p')
                         for (let i = 0; i < cart_storage.length; i++) {
                             if (article.getAttribute("data-id") == cart_storage[i][0] && article.getAttribute("data-color") == cart_storage[i][2]) {
                                 cart_storage[i][1] = parseFloat(this.value)
+                                p.innerText = `Qté : ${this.value}`
+
                             }
                             if (cart_storage[i][1] == 0) {
                                 article.remove()
@@ -75,6 +80,8 @@ function panierHtml () {
             }
 
             changeQty()
+
+            // fonction qui supprime lorsqu'on appui sur supprimer
 
             function deleteElement() {
                 let button = document.querySelectorAll(".deleteItem")
@@ -136,133 +143,144 @@ function panierHtml () {
 
 panierHtml()
 
-function form () {
-    let regExpName = /^[A-Z]+([\ A-Za-z]+)*/;
-    let regExpNoNumber = /^[^0-9()]+$/
-    let regExpAddress = /^[0-9]{1,4}(?:[,. ]){1}([a-zA-Z]+)*/
-    let regExpEmail =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
-    function firstName() {
-        let firstName = document.getElementById("firstName")
-        firstName.addEventListener ('change', function() {
-            if (regExpName.test(firstName.value) && regExpNoNumber.test(firstName.value)) {
-                document.getElementById("firstNameErrorMsg").innerHTML = ""
-                return true
-            } else {
-                document.getElementById("firstNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-                return false
-            }
-        })
+let firstName = document.getElementById("firstName")
+let lastName = document.getElementById("lastName")
+let address = document.getElementById("address")
+let city = document.getElementById("city")
+let email = document.getElementById("email")
+
+let regExpName = /^[A-Z]+([\ A-Za-z]+)*/;
+let regExpNoNumber = /^[^0-9()]+$/
+let regExpAddress = /^[0-9]{1,4}(?:[,. ]){1}([a-zA-Z]+)*/
+let regExpEmail =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+
+
+function controlfirstName(){
+    let firstName = document.getElementById("firstName")
+    if (regExpName.test(firstName.value) && regExpNoNumber.test(firstName.value)) {
+        document.getElementById("firstNameErrorMsg").innerHTML = ""
+        return true
+    } else {
+        document.getElementById("firstNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+        return false
     }
+}
 
-    firstName()
 
-    function lastName(){
-        let lastName = document.getElementById("lastName")
-        lastName.addEventListener ('change', function() {
-            if (regExpName.test(lastName.value) && regExpNoNumber.test(lastName.value)) {
-                document.getElementById("lastNameErrorMsg").innerHTML = ""
-                return true
-            } else {
-                document.getElementById("lastNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-                return false
-            }
-        })
+function controlLastName(){
+    if (regExpName.test(lastName.value) && regExpNoNumber.test(lastName.value)) {
+        document.getElementById("lastNameErrorMsg").innerHTML = ""
+        return true
+    } else {
+        document.getElementById("lastNameErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+        return false
     }
+}
 
-    lastName()
-    
-    function address(){
-        let address = document.getElementById("address")
+function controlAddress(){
+    if (regExpAddress.test(address.value)) {
+        document.getElementById("addressErrorMsg").innerHTML = ""
+        address === true
+        return true
+    } else {
+        document.getElementById("addressErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
         address === false
-        address.addEventListener ('change', function(){
-            if (regExpAddress.test(address.value)) {
-                document.getElementById("addressErrorMsg").innerHTML = ""
-                address === true
-                return true
-            } else {
-                document.getElementById("addressErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-                address === false
-                return false
-            }
-            
-        })
+        return false
     }
-
-    address()
-
-    function city() {
-        let city = document.getElementById("city")
-        city.addEventListener ('change', function() {
-            if (regExpName.test(city.value) && regExpNoNumber.test(city.value)) {
-                document.getElementById("cityErrorMsg").innerHTML = ""
-                return true
-            } else {
-                document.getElementById("cityErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-                return false
-            }
-        })
-    }
-
-    city()
-
-    function email () {
-        let email = document.getElementById("email")
-        email.addEventListener ('change', function() {
-            if (regExpEmail.test(email.value)) {
-                document.getElementById("emailErrorMsg").innerHTML = ""
-                return true
-            } else {
-                document.getElementById("emailErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
-                return false
-            }
-        })
-    }
-
-    email()
-
-    document.getElementById("order").addEventListener("click", function(){
-        if (firstName()) {
-            console.log("ass")
-        }
-    })
+}
     
+function controlCity(){
+    if (regExpName.test(city.value) && regExpNoNumber.test(city.value)) {
+        document.getElementById("cityErrorMsg").innerHTML = ""
+        return true
+    } else {
+        document.getElementById("cityErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+        return false
+    }
 }
 
-form()
+function controlEmail() {
+    if (regExpEmail.test(email.value)) {
+        document.getElementById("emailErrorMsg").innerHTML = ""
+        return true
+    } else {
+        document.getElementById("emailErrorMsg").innerHTML = "Veuillez renseigner correctement ce champ"
+        return false
+    }
+}
 
-function post (){
-    document.getElementById("order").addEventListener("click", function(){
-        let contact = {
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-            address: document.getElementById("address").value,
-            city: document.getElementById("city").value,
-            email: document.getElementById("email").value,
 
-        }
-        if (form()) {
-            fetch("http://url-service-web.com/api/users", {
-                method: "POST",
-                headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'application/json' 
-            },
-                body: JSON.stringify(jsonBody)
-            });
-        }
+firstName.addEventListener ('change', function() {
+    controlfirstName()
+})
+
+lastName.addEventListener('change', function(){
+    controlLastName()
+})
+
+address.addEventListener('change', function(){
+    controlAddress()
+})
+
+city.addEventListener('change', function(){
+    controlCity()
+})
+
+email.addEventListener('change', function(){
+    controlEmail()
+})
+    
+document.getElementById("order").addEventListener("click", async function(){
+    let contact = {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value,
+
+    }
+    let item = localStorage.cart
+    let postItemContact = {
+        contact,
+        item,
+    }
+    console.log(postItemContact)
+
+    const res = await fetch("http://url-service-web.com/api/order", {
+        method: "POST",
+        headers: { 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json' 
+    },
+        body: JSON.stringify(postItemContact)
     })
-}
 
-fetch(url+"order", {
-	method: "POST",
-	headers: { 
-'Accept': 'application/json', 
-'Content-Type': 'application/json' 
-},
-	body: JSON.stringify(jsonBody)
-});
+    response.json().then(data => {
+        console.log(data);
+      });
+    
+    
+        
 
+    // if (controlfirstName() && controlLastName() && controlAddress() && controlCity() && controlEmail()) {
+    //     fetch("http://url-service-web.com/api/users", {
+    //         method: "POST",
+    //         headers: { 
+    //         'Accept': 'application/json', 
+    //         'Content-Type': 'application/json' 
+    //     },
+    //         body: JSON.stringify(postItemContact)
+    //     })
+    //     .then(function(res) {
+    //         if (res.ok) {
+    //             console.log(content.orderId)
+    //           return res.json();
+              
+    //         }
+    //     })
+    // }
+})
 
 
 

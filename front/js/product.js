@@ -82,18 +82,20 @@ quantity.addEventListener('change',function(){
 })
 
 button.addEventListener("click", function() {
-    fetch(url + productId)
-    .then(function(res) {
-    if (res.ok) {
-        return res.json();
+    if (document.getElementById("colors").value != "" && parseFloat(quantity.value) > 0 && parseFloat(quantity.value) <= 100) {
+        fetch(url + productId)
+        .then(function(res) {
+        if (res.ok) {
+            return res.json();
+        }
+        })
+        .then(function(value) {
+            ajouterAuPanier(value)
+        })
+        .catch(function(err) {
+        console.log("Une erreur est survenue")
+        })
     }
-    })
-    .then(function(value) {
-        ajouterAuPanier(value)
-    })
-    .catch(function(err) {
-    console.log("Une erreur est survenue")
-    })
 })
 
 
