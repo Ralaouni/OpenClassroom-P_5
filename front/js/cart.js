@@ -12,6 +12,33 @@ const totQty = document.getElementById("totalQuantity")
 const totPrice = document.getElementById("totalPrice")
 
 
+// ici on additionne tout les prix de chaque élément du local storage et s'il n'y a pas d'élément, le prix est égale à 0
+
+function price(){
+    let tot = 0
+    if (cart_storage.length >  0){
+        for (let i = 0; i < cart_storage.length; i++) {
+            fetch(url+cart_storage[i][0])
+            .then(function(res) {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+            .then(function(value) {
+                     {
+                            totPrice.innerText = (tot += (value.price * cart_storage[i][1]))
+                    } 
+            })
+            
+        }
+    } else {
+        tot = 0
+        totPrice.innerText = tot
+    }
+    
+}
+
+
 // on va ajouter les produits dans cart.html
 function panierHtml () {
     // on répète la fonction ppour le nombre d'élément dans le local storage
@@ -116,7 +143,6 @@ function panierHtml () {
                         }
                         totalQty()
                         price(value)
-                        console.log(this.value)
                         localStorage.cart = JSON.stringify(cart_storage)
                     })
                 });
@@ -150,21 +176,6 @@ function panierHtml () {
             deleteElement()
             
 
-            //   ici on additionne tout les prix de chaque élément du local storage
-            function price(value){
-                let tot = 0
-                if (cart_storage.length >  0) {
-                    for (let i = 0; i < cart_storage.length; i++) {
-                        totPrice.innerText = (tot += (value.price * cart_storage[i][1]))
-                    }
-                
-                } else {
-                    tot = 0
-                    totPrice.innerText = tot
-                }
-            }
-            price(value)
-
             // fonction qui calcul la quantité de produit en additionnant toute les quantité que nous avons dans le local storage
             function totalQty () {
                 let tot = 0
@@ -185,6 +196,7 @@ function panierHtml () {
 }
 
 panierHtml()
+price()
 
 
 let firstName = document.getElementById("firstName")

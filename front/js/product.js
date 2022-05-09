@@ -1,5 +1,5 @@
 
-let cart = []
+let cart = JSON.parse(localStorage.cart)
 let button = document.getElementById ("addToCart")
 let q = 0
 const url = "http://localhost:3000/api/products/"
