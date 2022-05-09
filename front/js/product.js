@@ -51,7 +51,6 @@ function ajouterAuPanier(products) {
             }
         }
     localStorage.setItem("cart", JSON.stringify(cart))
-    console.log(localStorage)
 }
 
 

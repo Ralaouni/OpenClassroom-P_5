@@ -1,4 +1,5 @@
 
+
 // ici on récupère le localStorage en JSON et on le retransforme en javascript
 let cart_storage = JSON.parse(localStorage.cart)
 
@@ -24,29 +25,71 @@ function panierHtml () {
         .then(function(value) {
             // ici on ajoute le HTML contenant tout nos produits dans "cart__items" tout en gardant la couleur choisie et la quantité de chaque éléments 
             function panier1(value){
-                cart_items.innerHTML += `
-                <article class="cart__item" data-id="${value._id}" data-color="${cart_storage[i][2]}">
-                    <div class="cart__item__img">
-                    <img src="${value.imageUrl}" alt="${value.altTxt}">
-                    </div>
-                    <div class="cart__item__content">
-                        <div class="cart__item__content__description">
-                            <h2>${value.name}</h2>
-                            <p>${cart_storage[i][2]}</p>
-                            <p>${value.price}</p>
-                        </div>
-                        <div class="cart__item__content__settings">
-                            <div class="cart__item__content__settings__quantity">
-                            <p>Qté : ${cart_storage[i][1]}  </p>
-                            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cart_storage[i][1]}">
-                            </div>
-                            <div class="cart__item__content__settings__delete">
-                            <p class="deleteItem">Supprimer</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-              `
+                const article = document.createElement("article")
+                article.setAttribute("class","cart__item")
+                article.setAttribute('data-id',`${value._id}`)
+                article.setAttribute('data-color',`${cart_storage[i][2]}`)
+                cart_items.appendChild(article)
+
+                const div1 = document.createElement("div")
+                div1.setAttribute("class","cart__item__img")
+                article.appendChild(div1)
+
+                const img = document.createElement("img")
+                img.setAttribute("src", `${value.imageUrl}`)
+                img.setAttribute("alt", `${value.altTxt}`)
+                div1.appendChild(img)
+
+                const div = document.createElement("div")
+                div.setAttribute("class","cart__item__content")
+                article.appendChild(div)
+
+                const div2 = document.createElement("div")
+                div2.setAttribute("class","cart__item__content__description")
+                div.appendChild(div2)
+
+                const div2h2 = document.createElement("h2")
+                div2h2.innerText = `${value.name}`
+                div2.appendChild(div2h2)
+
+                const div2p1 = document.createElement("p")
+                div2p1.innerText = `${cart_storage[i][2]}`
+                div2.appendChild(div2p1)
+
+                const div2p2 = document.createElement("p")
+                div2p2.innerText = `${value.price}`
+                div2.appendChild(div2p2)
+
+                const div3 = document.createElement("div")
+                div3.setAttribute("class","cart__item__content__settings")
+                div.appendChild(div3)
+
+                const div4 = document.createElement("div")
+                div4.setAttribute("class","cart__item__content__settings__quantity" )
+                div3.appendChild(div4)
+
+                const pqty = document.createElement("p")
+                pqty.innerText = `Qté : ${cart_storage[i][1]}`
+                div4.appendChild(pqty)
+
+                const inputqty = document.createElement("input") 
+                inputqty.setAttribute("type","number")
+                inputqty.setAttribute("class","itemQuantity")
+                inputqty.setAttribute("name","itemQuantity")
+                inputqty.setAttribute("min","1")
+                inputqty.setAttribute("max","100")
+                inputqty.setAttribute("value",`${cart_storage[i][1]}`)
+                div4.appendChild(inputqty)
+
+                const div5 = document.createElement("div")
+                div5.setAttribute("class", "cart__item__content__settings__delete")
+                div3.appendChild(div5)
+
+                const pdelete = document.createElement("p")
+                pdelete.setAttribute("class", 'deleteItem')
+                pdelete.innerText = "Supprimer"
+                div5.appendChild(pdelete)
+
             }
             panier1(value)
 
@@ -155,6 +198,8 @@ let regExpNoNumber = /^[^0-9()]+$/
 let regExpAddress = /^[0-9]{1,4}(?:[,. ]){1}([a-zA-Z]+)*/
 let regExpEmail =  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
+// On va créer des fonctions qui vont valider les données inscrites par l'utilisateur grâce aux regex
+// Elle retourne true si c'est validé
 
 function controlfirstName(){
     let firstName = document.getElementById("firstName")
@@ -210,6 +255,7 @@ function controlEmail() {
     }
 }
 
+// On ajoute ces fonctions a des events listener pour verifier les données on "change"
 
 firstName.addEventListener ('change', function() {
     controlfirstName()
@@ -230,59 +276,67 @@ city.addEventListener('change', function(){
 email.addEventListener('change', function(){
     controlEmail()
 })
-    
-document.getElementById("order").addEventListener("click", async function(){
-    let contact = {
-        firstName: firstName.value,
-        lastName: lastName.value,
-        address: address.value,
-        city: city.value,
-        email: email.value,
 
+
+// Ici on va creer un evemenement au moment de submit le formulaire
+    
+document.getElementsByClassName('cart__order__form')[0].addEventListener("submit", function(event){
+
+    // On fait en sorte que cela fonctionne que si toutes les données du formulaire sont validées
+
+    if (controlfirstName() && controlLastName() && controlAddress() && controlCity() && controlEmail()) {
+        event.preventDefault()
+
+        // On créé l'obet contact avec les données du formulaire
+
+        let contact = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value,
+            email: email.value,
+        }
+
+        // on créé le products avec les Id des différents objets sélectionné par l'utilisateur
+
+        let products = []
+
+        for (let i = 0; i < cart_storage.length; i++) {
+            products.push(cart_storage[i][0])
+        }
+        let postproductsContact = {
+            contact,
+            products,
+        }
+
+        // On va faire un requète POST à l'API en lui envoyant les contact et products et attendre sa réponse, qui sera l'Id de la commande 
+
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json' 
+        },
+            body: JSON.stringify(postproductsContact)
+        })
+
+        .then(function(reponseAPI) {
+            if (reponseAPI.ok) {
+                return reponseAPI.json()
+            }
+        })
+        .then(function(reponseId) {
+        // On clear le local Storage et on y met l'Id de commande 
+            localStorage.clear()
+            localStorage.setItem("orderId", reponseId.orderId)
+        // On redirige l'utilisateur vers la page de confirmation 
+            window.location=`./confirmation.html?${reponseId.orderId}`
+            console.log(reponseId.orderId)
+        })
+        .catch (function(err) {
+            console.log("Une erreur est survenue")
+        });
+
+        ;
     }
-    let item = localStorage.cart
-    let postItemContact = {
-        contact,
-        item,
-    }
-    console.log(postItemContact)
-
-    const res = await fetch("http://url-service-web.com/api/order", {
-        method: "POST",
-        headers: { 
-        'Accept': 'application/json', 
-        'Content-Type': 'application/json' 
-    },
-        body: JSON.stringify(postItemContact)
-    })
-
-    response.json().then(data => {
-        console.log(data);
-      });
-    
-    
-        
-
-    // if (controlfirstName() && controlLastName() && controlAddress() && controlCity() && controlEmail()) {
-    //     fetch("http://url-service-web.com/api/users", {
-    //         method: "POST",
-    //         headers: { 
-    //         'Accept': 'application/json', 
-    //         'Content-Type': 'application/json' 
-    //     },
-    //         body: JSON.stringify(postItemContact)
-    //     })
-    //     .then(function(res) {
-    //         if (res.ok) {
-    //             console.log(content.orderId)
-    //           return res.json();
-              
-    //         }
-    //     })
-    // }
 })
-
-
-
-
-                
