@@ -29,6 +29,9 @@ function price(){
                             totPrice.innerText = (tot += (value.price * cart_storage[i][1]))
                     } 
             })
+            .catch(function(err) {
+                console.log("Une erreur est survenue")
+           });
             
         }
     } else {
@@ -131,7 +134,7 @@ function panierHtml () {
                         let article = item.closest("article")
                         let p = item.closest('div').querySelector('p')
                         for (let i = 0; i < cart_storage.length; i++) {
-                            if (article.getAttribute("data-id") == cart_storage[i][0] && article.getAttribute("data-color") == cart_storage[i][2]) {
+                            if (article.getAttribute("data-id") == cart_storage[i][0] && article.getAttribute("data-color") == cart_storage[i][2] && this.value >= 0  && this.value <= 100) {
                                 cart_storage[i][1] = parseFloat(this.value)
                                 p.innerText = `Qté : ${this.value}`
 
@@ -168,7 +171,6 @@ function panierHtml () {
                         }
                         totalQty()
                         price(value)
-                        console.log(localStorage)
                     })
                 });
             }
@@ -299,7 +301,7 @@ document.getElementsByClassName('cart__order__form')[0].addEventListener("submit
     if (controlfirstName() && controlLastName() && controlAddress() && controlCity() && controlEmail()) {
         event.preventDefault()
 
-        // On créé l'obet contact avec les données du formulaire
+        // On créé l'objet contact avec les données du formulaire
 
         let contact = {
             firstName: firstName.value,
@@ -338,12 +340,8 @@ document.getElementsByClassName('cart__order__form')[0].addEventListener("submit
             }
         })
         .then(function(reponseId) {
-        // On clear le local Storage et on y met l'Id de commande 
-            localStorage.clear()
-            localStorage.setItem("orderId", reponseId.orderId)
         // On redirige l'utilisateur vers la page de confirmation 
-            window.location=`./confirmation.html?${reponseId.orderId}`
-            console.log(reponseId.orderId)
+            window.location=`./confirmation.html?id=${reponseId.orderId}`
         })
         .catch (function(err) {
             console.log("Une erreur est survenue")

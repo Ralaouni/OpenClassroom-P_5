@@ -1,5 +1,10 @@
 
+if (localStorage.cart === undefined) {
+    let cart = []
+    localStorage.setItem("cart",JSON.stringify(cart))
+} 
 let cart = JSON.parse(localStorage.cart)
+
 let button = document.getElementById ("addToCart")
 let q = 0
 const url = "http://localhost:3000/api/products/"
@@ -13,31 +18,31 @@ const quantity = document.getElementById("quantity")
 // ajoute une image au premier élément avec la classe item__img
 function ajoutImg(products){
     let itemImg = document.getElementsByClassName("item__img")[0]
-    itemImg.innerHTML = `<img src="${products.imageUrl}" alt="${products.altTxt}">`;
+    itemImg.innerHTML = `<img src=${products.imageUrl} alt=${products.altTxt}>`;
 }
 
 // ajout du name dans id=title
 function ajoutH1(products){
     let title = document.getElementById("title")
-    title.innerText = `"${products.name}"`
+    title.innerText = `${products.name}`
 }
 
 // ajout du prix dans id=price
 function ajoutPrix(products){
     let price = document.getElementById("price")
-    price.innerText = `"${products.price}"`
+    price.innerText = `${products.price}`
 }
 
 // ajout de la dercription dans id=description
 function ajoutDscrpt(products) {
     let dscrpt = document.getElementById("description")
-    dscrpt.innerText = `"${products.description}"`
+    dscrpt.innerText = `${products.description}`
 }
 
 // ajout des couleurs avec un nouveau paramètre à prendre en compte , i = le nombre de couleurs disponible
 function ajoutClr(products, i) {
     let clrs = document.getElementById("colors")
-    clrs.innerHTML += `<option value = "${products.colors[i]}">"${products.colors[i]}"</option>`
+    clrs.innerHTML += `<option value = ${products.colors[i]}>${products.colors[i]}</option>`
 }
 
 // ici nous avons une fonction qui va nous permettre d'ajouter les articles sélectionné mais qui va aussi détecter si l'article exisite déjà , auquel cas il va augmenter la quantité de 1
@@ -94,6 +99,9 @@ button.addEventListener("click", function() {
         .catch(function(err) {
         console.log("Une erreur est survenue")
         })
+        alert("Le produit à bien été ajouté au panier")
+    } else {
+        alert("Le produit n'a pas été ajouté, verifiez que la couleur a été indiquer ou que la quantité ne dépasse pas 100")
     }
 })
 
