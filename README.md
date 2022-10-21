@@ -1,3 +1,5 @@
+I did the front-end Javascript part of an online shop website 
+
 # Kanap #
 
 This is the front end and back end server for Project 5 of the Web Developer path.
